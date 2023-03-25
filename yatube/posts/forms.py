@@ -19,6 +19,7 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError("Напишите что-нибудь")
         return text
 
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -26,6 +27,7 @@ class CommentForm(forms.ModelForm):
         label = {
             'text': 'Напишите текст комментария'
         }
+
     def clean_text(self):
         text = self.cleaned_data["text"]
         if text == " ":

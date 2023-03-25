@@ -41,13 +41,13 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     if request.user.is_authenticated and request.user != author:
-        following =  Follow.objects.select_related(
-            'user', 
-            'author'    
+        following = Follow.objects.select_related(
+            'user',
+            'author'
         ).exists()
     else:
         following = False
-           
+
     post_list = author.posts.order_by("-pub_date")
 
     paginator = Paginator(post_list, AMOUNT_POSTS_NUMBER)
@@ -85,7 +85,7 @@ def post_create(request):
     form = PostForm(
         request.POST or None,
         files=request.FILES or None,
-        )
+    )
     if form.is_valid():
         post = form.save(commit=False)
         post.author = request.user
@@ -137,24 +137,23 @@ def follow_index(request):
     context = {
         'title': title,
         'page_obj': page_obj,
-        }
+    }
     return render(request, 'posts/follow.html', context)
+
 
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     if request.user != author and Follow.objects.filter(
         user=request.user,
-        author=author       
+        author=author
     ).count() == 0:
         Follow.objects.get_or_create(user=request.user, author=author)
-    return redirect('posts:profile', username)    
-        
+    return redirect('posts:profile', username)
+
 
 @login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
     Follow.objects.filter(user=request.user, author=author).delete()
     return redirect('posts:profile', username)
-    
-    

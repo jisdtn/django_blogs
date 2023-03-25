@@ -145,25 +145,27 @@ class PostPagesTests(TestCase):
     def test_cache_index(self):
         """Тестируем кэщ главной страницы"""
         cached_posts = self.guest_client.get(reverse('posts:index')).content
-        Post.objects.all().delete()   
+        Post.objects.all().delete()
         response = self.guest_client.get(reverse('posts:index'))
         self.assertEqual(cached_posts, response.content)
         cache.clear()
         response = self.authorized_client.get(reverse('posts:index'))
         self.assertNotEqual(cached_posts, response.content)
 
+
 class FollowTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='Blanc')   
+        cls.user = User.objects.create_user(username='Blanc')
         cls.author = User.objects.create_user(username='author')
         cls.logged_in_client = Client()
         cls.logged_in_client.force_login(cls.user)
 
-
     def test_follow(self):
-        subscription_url = reverse('posts:profile_follow', args=[self.author.username])
+        subscription_url = reverse(
+            'posts:profile_follow', args=[self.author.username]
+        )
         response = self.logged_in_client.post(subscription_url)
         self.assertEqual(response.status_code, 302)
 
@@ -175,7 +177,9 @@ class FollowTest(TestCase):
 
     def test_unfollow(self):
 
-        subscription_url = reverse('posts:profile_unfollow', args=[self.author.username])
+        subscription_url = reverse(
+            'posts:profile_unfollow', args=[self.author.username]
+        )
         response = self.logged_in_client.post(subscription_url)
         self.assertEqual(response.status_code, 302)
 
@@ -185,12 +189,11 @@ class FollowTest(TestCase):
         ).exists()
         self.assertIsNotNone(subscription)
 
-        
     def correct_post_feed(self):
         Follow.objects.create(
             author=self.author,
             user=self.user
-        ) 
+        )
         response = self.user.get(
             reverse('posts:follow_index')
         )
@@ -200,7 +203,7 @@ class FollowTest(TestCase):
         Follow.objects.create(
             author=self.author,
             user=self.user
-        ) 
+        )
         response = self.user.get(
             reverse('posts:follow_index')
         )

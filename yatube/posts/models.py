@@ -30,6 +30,7 @@ class Post(models.Model):
         upload_to='posts/',
         blank=True
     )
+
     class Meta:
         ordering = ('-pub_date',)
         verbose_name = 'Пост'
@@ -50,6 +51,7 @@ class Group(models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(models.Model):
     post = models.ForeignKey(
         Post,
@@ -64,23 +66,23 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments",
         verbose_name='Автор комментария',
-    )    
+    )
     text = models.TextField(verbose_name='Текст комментария')
 
     created = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     def __str__(self) -> str:
         return self.text
-    
+
 
 class Follow(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='following',
-    )    
+    )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='follower'
-    )    
+    )
