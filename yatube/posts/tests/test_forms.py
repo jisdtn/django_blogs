@@ -11,6 +11,7 @@ from posts.models import Group, Post, User, Comment
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
+
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class PostFormTests(TestCase):
     @classmethod
@@ -26,14 +27,14 @@ class PostFormTests(TestCase):
             text='Текст',
             author=cls.author,
             group=cls.group,
-        )  
-        
+        )
+
         cls.form = PostForm()
 
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
-        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True) # почему-то временная база не удаляется 
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
         self.guest_client = Client()
@@ -59,7 +60,7 @@ class PostFormTests(TestCase):
     def test_edit_post(self):
         """редактирует и сохраняет запись в Post."""
 
-        small_gif = (            
+        small_gif = (
              b'\x47\x49\x46\x38\x39\x61\x02\x00'
              b'\x01\x00\x80\x00\x00\x00\x00\x00'
              b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
@@ -95,12 +96,14 @@ class PostFormTests(TestCase):
                 image='posts/small.gif',
             ).exists()
         )
+
+
 class CommentFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user = User.objects.create_user(username='Blanc')   
+        cls.user = User.objects.create_user(username='Blanc')
         cls.post = Post.objects.create(
             text='Текст',
             author=cls.user,
@@ -121,7 +124,9 @@ class CommentFormTests(TestCase):
         }
 
         response = self.authorized_client.post(
-            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
+            reverse(
+                'posts:add_comment', kwargs={'post_id': self.post.id}
+            ),
             data=form_data,
             follow=True
         )
@@ -154,3 +159,4 @@ class CommentFormTests(TestCase):
         self.assertRedirects(
             response, (f'/auth/login/?next=/posts/{self.post.id}/comment/')
         )
+
