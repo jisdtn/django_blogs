@@ -41,7 +41,7 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     if request.user.is_authenticated and request.user != author:
-        following = Follow.objects.select_related(
+        following = Follow.objects.filter(
             'user',
             'author'
         ).exists()
@@ -68,7 +68,7 @@ def profile(request, username):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     post_count = post.author.posts.count()
-    comments = post.comments.all
+    comments = post.comments.all()
 
     form = CommentForm(request.POST or None)
     context = {
@@ -147,7 +147,7 @@ def profile_follow(request, username):
     if request.user != author and Follow.objects.filter(
         user=request.user,
         author=author
-    ).count() == 0:
+    ).exists() == False:
         Follow.objects.get_or_create(user=request.user, author=author)
     return redirect('posts:profile', username)
 
