@@ -12,8 +12,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
     'testserver',
-    'www.mihaershv.pythonanywhere.com',
-    'mihaershv.pythonanywhere.com',
+    'www.mihaershv98765432.pythonanywhere.com',
+    'mihaershv98765432.pythonanywhere.com',
 ]
 
 INSTALLED_APPS = [
