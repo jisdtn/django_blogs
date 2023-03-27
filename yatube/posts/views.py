@@ -40,13 +40,7 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    if request.user.is_authenticated and request.user != author:
-        following = Follow.objects.filter(
-            'user',
-            'author'
-        ).exists()
-    else:
-        following = False
+    following = request.user.is_authenticated and author.following.filter(user=request.user).exists() 
 
     post_list = author.posts.order_by("-pub_date")
 
