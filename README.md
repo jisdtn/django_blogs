@@ -48,14 +48,14 @@ python3 manage.py migrate
 ```
 python3 manage.py runserver
 ```
-### Примеры запросов к API.
+### Примеры запросов.
 
 ```commandline
-http://localhost/api/cats/ ('GET')
+http://localhost/ ('GET')
 ```
 ```commandline
-http://localhost/api/cats/ ('POST')
+http://localhost/group/<slug:slug>/ ('GET')
 ```
 ```commandline
-http://localhost/api/achievements/ ('GET')
+http://localhost/create/ ('POST')
 ```
